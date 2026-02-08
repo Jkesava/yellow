@@ -1,0 +1,32 @@
+agent: CSAT_Agent
+
+flow: CSAT_Flow
+
+steps:
+  - ask_rating:
+      type: message
+      text: "Please rate our chat."
+      quick_replies:
+        - "Good"
+        - "Average"
+        - "Bad"
+      slot: csat_rating
+
+  - ask_feedback:
+      type: message
+      text: "Thank you. Please share any additional feedback (optional)."
+      slot: csat_feedback
+      optional: true
+
+  - save_csat:
+      type: function
+      function: saveToSheetOrDb.js   # or internal Yellow.ai storage
+      input:
+        rating: "{{csat_rating}}"
+        feedback: "{{csat_feedback}}"
+
+  - thank_you:
+      type: message
+      text: "Thanks for your feedback. Have a great day!"
+      end: true
+

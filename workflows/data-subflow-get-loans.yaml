@@ -1,0 +1,50 @@
+flow: Data_Subflow_GetLoans
+
+inputs:
+  phone_number
+  dob
+
+outputs:
+  selected_loan_id
+
+steps:
+  - call_get_loans_api:
+      type: function
+      function: retry-exponential-backoff.js
+      input:
+        url: "https://yellow-bank-api.free.beeceptor.com/getLoanAccounts?phone={{phone_number}}&dob={{dob}}"
+        method: "GET"
+        headers: {}
+        body: {}
+        maxRetries: 3
+        baseDelayMs: 500
+
+  - check_success:
+      condition: call_get_loans_api.success == true
+      on_true: project_data
+      on_false: error_node
+
+  - project_data:
+      type: function
+      function: projection-transform.js
+      input:
+        getLoanAccountsResponse: "{{call_get_loans_api.data}}"
+
+  - render_drm_carousel:
+      type: drm
+      drm_id: DRM_GetLoanAccounts_Carousel
+      input:
+        loans: "{{project_data.loans}}"
+
+  - capture_selection:
+      type: event
+      source: drm_button_click
+      assign:
+        selected_loan_id: "{{event.payload.loanId}}"
+      return: true
+
+  - error_node:
+      type: message
+      text: "I am unable to fetch your loan accounts right now. Please try again later."
+      return: true
+

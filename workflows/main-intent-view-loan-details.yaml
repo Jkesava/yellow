@@ -1,0 +1,46 @@
+flow: Main_ViewLoanDetails
+trigger:
+  intent: view_loan_details
+
+variables:
+  phone_number: null
+  dob: null
+  otp_server_value: null
+  otp_user_value: null
+  selected_loan_id: null
+
+steps:
+  - ask_phone:
+      type: message
+      text: "Sure, I can help you with your loan details. Please share your registered phone number."
+      slot: phone_number
+      validation: phone_regex_or_phone_type
+
+  - ask_dob:
+      type: message
+      text: "Thank you. Please share your Date of Birth (DD-MM-YYYY)."
+      slot: dob
+      validation: date_type
+
+  - call_auth_subflow:
+      type: subflow
+      flow: Auth_Subflow_OTP
+
+  - on_auth_success:
+      condition: auth_status == "success"
+      next: call_data_subflow
+
+  - on_auth_failure:
+      condition: auth_status != "success"
+      type: message
+      text: "Authentication failed. Please try again after some time."
+      end: true
+
+  - call_data_subflow:
+      type: subflow
+      flow: Data_Subflow_GetLoans
+
+  - call_details_subflow:
+      type: subflow
+      flow: Details_Subflow_LoanDetails
+

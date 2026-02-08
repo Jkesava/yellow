@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "loanId": "{{request.query.loanId}}",
+  "tenure": "15 Years",
+  "interest_rate": "8.25%",
+  "principal_pending": "₹35,40,000",
+  "interest_pending": "₹4,75,000",
+  "nominee": "Rohan Sharma"
+}
+

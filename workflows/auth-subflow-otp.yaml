@@ -1,0 +1,67 @@
+flow: Auth_Subflow_OTP
+
+inputs:
+  phone_number
+  dob
+
+outputs:
+  auth_status
+  otp_server_value
+
+steps:
+  - node_trigger_otp_api:
+      type: function
+      function: retry-exponential-backoff.js
+      input:
+        url: "https://yellow-bank-api.free.beeceptor.com/triggerOTP"
+        method: "POST"
+        headers: { "Content-Type": "application/json" }
+        body: { "phone": "{{phone_number}}", "dob": "{{dob}}" }
+        maxRetries: 3
+        baseDelayMs: 500
+
+  - check_api_success:
+      condition: node_trigger_otp_api.success == true
+      on_true: extract_otp
+      on_false: fail_auth
+
+  - extract_otp:
+      type: assign
+      set:
+        otp_server_value: node_trigger_otp_api.data.otp
+
+  - prompt_user_otp:
+      type: message
+      text: "I have sent an OTP to your registered phone number. Please enter the 4‑digit OTP to proceed."
+      slot: otp_user_value
+      validation: number_type
+
+  - verify_otp:
+      type: function
+      function: otp-verification.js
+      input:
+        apiResponseTriggerOtp:
+          otp: "{{otp_server_value}}"
+        user_otp: "{{otp_user_value}}"
+
+  - otp_success:
+      condition: verify_otp.isValid == true
+      assign:
+        auth_status: "success"
+      return: true
+
+  - otp_failure:
+      condition: verify_otp.isValid != true
+      type: message
+      text: "The OTP you entered is incorrect. Please try again."
+      assign:
+        auth_status: "failed"
+      return: true
+
+  - fail_auth:
+      type: message
+      text: "I am unable to generate OTP at the moment due to a technical issue. Please try again later."
+      assign:
+        auth_status: "failed"
+      return: true
+

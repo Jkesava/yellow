@@ -1,0 +1,40 @@
+{
+  "status": "success",
+  "loans": [
+    {
+      "loan_id": "L-98721",
+      "type": "Home Loan",
+      "tenure": "15 Years",
+      "internal_audit_code": "SEC-9921",
+      "bank_branch_id": "YB-MUM-01",
+      "internal_rating": "A1",
+      "audit_date": "2024-06-01",
+      "processing_center": "MUMBAI-PC",
+      "created_by": "SYS01",
+      "last_updated_by": "SYS32",
+      "created_at": "2023-05-02T10:00:00Z",
+      "last_updated_at": "2024-01-12T09:00:00Z",
+      "currency": "INR",
+      "internal_segment": "RETAIL",
+      "portfolio_code": "HL-IND-01"
+    },
+    {
+      "loan_id": "L-56211",
+      "type": "Personal Loan",
+      "tenure": "5 Years",
+      "internal_audit_code": "SEC-4412",
+      "bank_branch_id": "YB-HYD-02",
+      "internal_rating": "B2",
+      "audit_date": "2024-01-15",
+      "processing_center": "HYDERABAD-PC",
+      "created_by": "SYS02",
+      "last_updated_by": "SYS21",
+      "created_at": "2022-11-08T08:15:00Z",
+      "last_updated_at": "2024-02-01T13:45:00Z",
+      "currency": "INR",
+      "internal_segment": "RETAIL",
+      "portfolio_code": "PL-IND-02"
+    }
+  ]
+}
+

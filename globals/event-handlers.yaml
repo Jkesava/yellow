@@ -1,0 +1,32 @@
+global_handlers:
+  - name: Handle_Change_Number
+    trigger:
+      type: text_match
+      patterns:
+        - "change my number"
+        - "that's my old number"
+        - "old number"
+        - "different number"
+    actions:
+      - assign:
+          phone_number: null
+          dob: null
+          otp_server_value: null
+          otp_user_value: null
+      - message:
+          text: "No problem. Let's restart your verification. Please share the phone number you want to use."
+      - goto_flow:
+          flow: Main_ViewLoanDetails
+          step: ask_phone
+
+  - name: Handle_Restart
+    trigger:
+      type: text_match
+      patterns:
+        - "restart"
+        - "start over"
+    actions:
+      - clear_all_slots: true
+      - message:
+          text: "Restarting the process. Please tell me what you would like to do regarding your loans."
+

@@ -1,0 +1,24 @@
+{
+  "type": "carousel",
+  "elements": [
+    {
+      "title": "{{loan.type}}",
+      "subtitle": "Loan ID: {{loan.loanId}} | Tenure: {{loan.tenure}}",
+      "buttons": [
+        {
+          "type": "postback",
+          "title": "Select",
+          "message": "Select {{loan.loanId}}",
+          "payload": {
+            "loanId": "{{loan.loanId}}"
+          }
+        }
+      ]
+    }
+  ],
+  "data_binding": {
+    "collection": "loans",
+    "item": "loan"
+  }
+}
+

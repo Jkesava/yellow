@@ -1,0 +1,24 @@
+{
+  "type": "template",
+  "payload": {
+    "text": "Here are your loan details:",
+    "fields": [
+      "Loan ID: {{details.loanId}}",
+      "Tenure: {{details.tenure}}",
+      "Interest rate: {{details.interest_rate}}",
+      "Principal pending: {{details.principal_pending}}",
+      "Interest pending: {{details.interest_pending}}",
+      "Nominee: {{details.nominee}}"
+    ],
+    "quick_replies": [
+      {
+        "content_type": "text",
+        "title": "Rate our chat",
+        "payload": {
+          "action": "GOTO_CSAT"
+        }
+      }
+    ]
+  }
+}
+

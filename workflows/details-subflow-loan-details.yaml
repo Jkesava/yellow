@@ -1,0 +1,36 @@
+flow: Details_Subflow_LoanDetails
+
+inputs:
+  selected_loan_id
+
+steps:
+  - call_loan_details_api:
+      type: function
+      function: retry-exponential-backoff.js
+      input:
+        url: "https://yellow-bank-api.free.beeceptor.com/loanDetails?loanId={{selected_loan_id}}"
+        method: "GET"
+        headers: {}
+        body: {}
+        maxRetries: 3
+        baseDelayMs: 500
+
+  - check_success:
+      condition: call_loan_details_api.success == true
+      on_true: render_details_drm
+      on_false: error_node
+
+  - render_details_drm:
+      type: drm
+      drm_id: DRM_LoanDetails_QuickReplies
+      input:
+        details: "{{call_loan_details_api.data}}"
+
+  - end_step:
+      type: end
+
+  - error_node:
+      type: message
+      text: "I am unable to fetch the loan details right now. Please try again later."
+      end: true
+
